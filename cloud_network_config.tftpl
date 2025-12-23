@@ -1,0 +1,17 @@
+#cloud-config
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp1s0:
+      dhcp4: no
+      addresses:
+        - ${ipv4}
+      nameservers:
+        search: 
+          - ${ns_search_domain}
+        addresses:
+          - ${ns_addresses}
+      routes:
+        - to: default
+          via: ${ipv4_via_route}

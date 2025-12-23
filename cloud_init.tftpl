@@ -1,0 +1,39 @@
+#cloud-config
+hostname: ${hostname}
+users:
+  - default
+  - name: ${user_name}
+    ssh_authorized_keys:
+      - ${ssh_key}
+    sudo: 'ALL=(ALL) NOPASSWD:ALL'
+ssh_pwauth: true
+chpasswd:
+  expire: false
+  users:
+  - name: ubuntu
+    password: ${password}
+    type: text
+  - name: ${user_name}
+    password: ${password}
+    type: text
+disable_root: false
+package_update: true
+package_upgrade: true
+packages:
+  - qemu-guest-agent
+  - vim
+  - curl
+write_files:
+  - path: /etc/sysctl.d/10-disable-ipv6.conf
+    permissions: '0644'
+    owner: root
+    content: |
+      net.ipv6.conf.all.disable_ipv6 = 1
+      net.ipv6.conf.default.disable_ipv6 = 1
+      net.ipv6.conf.lo.disable_ipv6 = 1
+      net.ipv6.conf.eth0.disable_ipv6 = 1
+runcmd:
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
+  - systemctl restart systemd-sysctl
+  - echo "done" > /tmp/cloud-config.done
