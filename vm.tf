@@ -1,4 +1,4 @@
-resource "libvirt_domain" "domain-vm-tst" {
+resource "libvirt_domain" "domain-vm" {
   name                = var.vm_name
   memory              = var.vm_memory
   memory_unit         = "MiB"
